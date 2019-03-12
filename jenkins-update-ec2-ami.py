@@ -176,23 +176,19 @@ def main():
 
     get_jenkins_crumb()
     build_output = get_jenkins_build_output()
-    if build_output.len() == 0:
+
+    if len(build_output) == 0:
         print "No build output, unable to proceed"
         sys.exit(1)
 
     error_lines = get_error_lines(build_output)
     packer_ami_id = get_packer_ami_id(build_output)
 
-    if packer_ami_id is None or packer_ami_id.len() == 0:
+    if packer_ami_id is None or len(packer_ami_id) == 0:
         print "Unable to locate newly created AMI"
         print build_output
         sys.exit(1)
 
-    if error_lines:
-        print error_lines
-        print "Deleting newly created AMI %s" % packer_ami_id
-        delete_ami(packer_ami_id)
-        sys.exit(1)
 
     old_jenkins_ami_id = get_jenkins_ami_id()
     if not old_jenkins_ami_id:
