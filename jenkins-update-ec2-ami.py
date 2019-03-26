@@ -184,9 +184,6 @@ def main():
     error_lines = get_error_lines(get_jenkins_build_output())
     packer_ami_id = get_packer_ami_id(get_jenkins_build_output())
 
-    print "packer ami id"
-    print packer_ami_id
-
     if packer_ami_id is None or len(packer_ami_id) == 0:
         print "Unable to locate newly created AMI"
         print get_jenkins_build_output().encode("utf-8")
@@ -204,12 +201,12 @@ def main():
     else:
         print "Ran into an error when attempting to update the Jenkins AMI ID"
         print "Deleting newly created AMI %s" % packer_ami_id
-        # delete_ami(packer_ami_id)
+        delete_ami(packer_ami_id)
         sys.exit(1)
 
     if old_jenkins_ami_id and old_jenkins_ami_id != packer_ami_id:
         print "Deleting previous Jenkins AMI %s in AWS" % old_jenkins_ami_id
-        # delete_ami(old_jenkins_ami_id)
+        delete_ami(old_jenkins_ami_id)
 
 if __name__ == '__main__':
     main()
