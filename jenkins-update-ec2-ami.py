@@ -5,6 +5,7 @@ import os
 import boto.ec2
 import sys
 import re
+from pprint import pprint
 
 build_url = os.environ['BUILD_URL']
 jenkins_base_url = os.environ['JENKINS_URL']
@@ -88,6 +89,7 @@ def get_error_lines(build_output):
 def get_packer_ami_id(build_output):
     regex = re.compile(r'.*amazon-ebs: AMIs were created.*\n.*(ami-.*)$', re.MULTILINE)
     matches = [m.groups() for m in regex.finditer(build_output)]
+    pprint(matches)
     for m in matches:
         return m[0].strip()
 
@@ -181,8 +183,6 @@ def main():
     #       - Pass the build
 
     get_jenkins_crumb()
-
-    print("R")
 
     if len(get_jenkins_build_output()) == 0:
         print "No build output, unable to proceed"
