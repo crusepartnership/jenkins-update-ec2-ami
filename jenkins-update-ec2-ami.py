@@ -37,8 +37,12 @@ def get_jenkins_crumb():
 
     crumb_url = get_crumb_url()
     r = requests.get(crumb_url, verify=verify_ssl)
+
+    print(crumb_url)
+
     jenkins_crumb_header_name = r.json()["crumbRequestField"]
     jenkins_crumb_header_value = r.json()["crumb"]
+
     return jenkins_crumb_header_value
 
 def get_jenkins_build_output():
@@ -119,6 +123,8 @@ def get_jenkins_ami_id():
         """ % (ec2_cloud_instance, ami_profile_name)
     payload = {'script': groovy_script}
     headers = {jenkins_crumb_header_name: jenkins_crumb_header_value}
+    print(headers)
+
     r = requests.post(groovy_url, verify=verify_ssl, data=payload, headers=headers)
     if not r.status_code == 200:
         print 'HTTP POST to Jenkins URL %s resulted in %s' % (groovy_url, r.status_code)
@@ -176,6 +182,7 @@ def main():
 
     get_jenkins_crumb()
 
+    print("R")
 
     if len(get_jenkins_build_output()) == 0:
         print "No build output, unable to proceed"
